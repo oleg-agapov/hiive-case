@@ -1,10 +1,10 @@
 
 select
-    distinct transaction_state,
+    distinct new_state as transaction_state,
     case 
-        when transaction_state in ('closed_paid', 'cancelled', 'expired')
+        when new_state in ('closed_paid', 'cancelled', 'expired', 'approval_declined')
             then FALSE
-        when transaction_state in ('pending_approval', 'bid_accepted')
+        when new_state in ('pending_approval', 'bid_accepted')
             then TRUE
     end as is_open_transaction
-from {{ ref('stg_transactions') }}
+from {{ ref('stg_transaction_transitions') }}

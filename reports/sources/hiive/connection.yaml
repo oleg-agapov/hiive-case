@@ -1,0 +1,5 @@
+# This file was automatically generated
+name: hiive
+type: duckdb
+options:
+  filename: ../../../hiive/database.duckdb

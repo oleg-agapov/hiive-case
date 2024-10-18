@@ -163,3 +163,5 @@ cython_debug/
 
 hiive/database.duckdb
 case_study.pdf
+node_modules/
+.DS_Store

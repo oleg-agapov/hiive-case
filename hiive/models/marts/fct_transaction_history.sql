@@ -20,6 +20,7 @@ transition_intervals AS (
         tt.transitioned_at,
         COALESCE(
                 lead(tt.transitioned_at) over(partition BY tt.transaction_id ORDER BY tt.transitioned_at),
+                case when ts.is_open_transaction = FALSE then tt.transitioned_at end,
                 '2099-01-01'
         ) AS next_transitioned_at,
         
@@ -32,6 +33,7 @@ daily_transition_intervals AS (
     SELECT
         ti.transaction_id,
         ti.transaction_state,
+        ti.is_open_transaction,
         ti.transitioned_at,
         ti.next_transitioned_at,
         c.calendar_date AS report_date,
@@ -39,31 +41,32 @@ daily_transition_intervals AS (
         ti.num_shares,
         ti.price_per_share,
         ti.gross_proceeds,
-        CASE
-            WHEN row_number() over (PARTITION BY ti.transaction_id, C.calendar_date ORDER BY C.calendar_date DESC) = 1
-            THEN c.calendar_date
-            END
-            AS daily_report_date,
-        CASE
-            WHEN row_number() over (PARTITION BY ti.transaction_id, date_trunc('month', C.calendar_date) ORDER BY C.calendar_date DESC) = 1
-            THEN c.calendar_date
-            END
-            AS monthly_report_date
     FROM transition_intervals AS ti
         CROSS JOIN stg_calendar AS c
     WHERE c.calendar_date:: DATE BETWEEN ti.transitioned_at:: DATE AND ti.next_transitioned_at:: DATE
-AND ti.is_open_transaction = TRUE
+    -- AND ti.is_open_transaction = TRUE
+    qualify row_number() over (
+        PARTITION BY ti.transaction_id, c.calendar_date 
+        ORDER BY ti.transitioned_at DESC
+    ) = 1
 )
 
 
 SELECT
     transaction_id,
     transaction_state,
+    is_open_transaction,
+    transitioned_at,
+    next_transitioned_at,
     report_date,
     COALESCE(transfer_method, 'other') as transfer_method,
     num_shares,
     price_per_share,
     gross_proceeds,
-    daily_report_date,
-    monthly_report_date
+    case when row_number() over (
+        PARTITION BY transaction_id, date_trunc('month', report_date)
+        ORDER BY report_date DESC) = 1
+        then date_trunc('month', report_date)
+        else null
+    end as monthly_report_date
 FROM daily_transition_intervals
