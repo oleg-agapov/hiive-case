@@ -1,4 +1,4 @@
-# Task 1. Model data to answer business questions about open transaction pipeline
+# Task 1: Model data to answer business questions about open transaction pipeline
 
 Our Finance team would like to understand information about transactions on the Hiive platform,
 specifically how much open pipeline we have at any given point in time. “Open pipeline” at Hiive
