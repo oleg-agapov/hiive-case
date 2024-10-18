@@ -13,5 +13,10 @@ with users as (
 select
     id,
     email,
-    investor_type
+    investor_type,
+    case 
+        when email LIKE '%@hiive.com' or email LIKE '%@hiivemarkets.com'
+            then TRUE
+        else FALSE
+    end as is_hiive_employee
 from users

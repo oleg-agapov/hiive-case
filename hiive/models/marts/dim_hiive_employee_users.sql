@@ -8,5 +8,4 @@ SELECT
 FROM
    {{ ref('stg_users') }}
 WHERE
-   email LIKE '%@hiive.com'
-   OR email LIKE '%@hiivemarkets.com'
+   is_hiive_employee = TRUE
