@@ -42,7 +42,9 @@ To answer those questions I would dbt pipeline with the following steps:
 1. (Optional) Create reporting models, that can further aggregate data for BI tool amd analysts:
     - `rpt_open_pipeline_daily` - shows daily statistics about open pipeline tranasctions and corresponding gross proceeds
 
-Model `fct_transaction_history` will be used to answer business questions about open transaction pipeline. To visualize the data I've built a simple BI dashboard that represents most critical information about the transactions.
+Model `fct_transaction_history` will be used to answer business questions about open transaction pipeline.
+
+To visualize the data I've built a [simple BI dashboard](https://hiive-dashboard.netlify.app/) that represents most critical information about the transactions.
 
 ![Dashboard](img/dashboard.png)
 

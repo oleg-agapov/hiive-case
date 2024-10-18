@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "build": "evidence build",
-    "build2": "evidence build && rm -rf ../docs && mv build ../docs",
+    "build2": "evidence sources && evidence build && rm -rf ../docs && mv build ../docs",
     "build:strict": "evidence build:strict",
     "build:strict2": "evidence build:strict && rm -rf ../docs && mv build ../docs",
     "dev": "evidence dev --open /",
