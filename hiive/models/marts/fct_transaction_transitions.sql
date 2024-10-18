@@ -19,7 +19,6 @@ select
     tt.transitioned_at,
     tt.new_state,
     ts.is_open_transaction,
-    t.num_shares,
     t.transfer_method,
     t.company_id,
     t.num_shares,

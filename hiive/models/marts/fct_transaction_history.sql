@@ -44,7 +44,6 @@ daily_transition_intervals AS (
     FROM transition_intervals AS ti
         CROSS JOIN stg_calendar AS c
     WHERE c.calendar_date:: DATE BETWEEN ti.transitioned_at:: DATE AND ti.next_transitioned_at:: DATE
-    -- AND ti.is_open_transaction = TRUE
     qualify row_number() over (
         PARTITION BY ti.transaction_id, c.calendar_date 
         ORDER BY ti.transitioned_at DESC
@@ -68,5 +67,6 @@ SELECT
         ORDER BY report_date DESC) = 1
         then date_trunc('month', report_date)
         else null
-    end as monthly_report_date
+    end as monthly_report_date,
+    {{ dbt_utils.generate_surrogate_key(['transaction_id', 'report_date']) }} as transaction_history_id
 FROM daily_transition_intervals

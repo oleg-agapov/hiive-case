@@ -1,0 +1,182 @@
+version: 2
+
+models:
+
+  - name: fct_transactions
+    description: "Table that contains info about transactions with the latest state."
+    columns:
+      - name: transaction_id
+        data_type: varchar
+        description: "The unique identifier of the transaction."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: bid_id
+        data_type: varchar
+        description: "The unique identifier of the accepted bid associated with the transaction."
+
+      - name: transaction_state
+        data_type: varchar
+        description: "The current state of the transaction. Transactions in cancelled, expired, closed_fee_paid issuer_approval_declined states are no longer active/open in pipeline."
+
+      - name: is_open_transaction
+        data_type: boolean
+        description: "Flag to indicate if the transaction is still open."
+
+      - name: transfer_method
+        data_type: varchar
+        description: "The method of transfer of the shared."
+
+      - name: inserted_at
+        data_type: timestamp
+        description: "When the transaction record was created."
+
+      - name: last_updated_at
+        data_type: timestamp
+        description: "When the transaction record was last updated."
+
+      - name: company_id
+        data_type: varchar
+        description: "The unique identifier of the issuing company of the shares."
+
+      - name: num_shares
+        data_type: integer
+        description: "The number of shares associated with the each transaction."
+
+      - name: price_per_share
+        data_type: integer
+        description: "The price per share of the transaction. The total revenue value of the transaction is the number of shared multiplied by the number of shares."
+
+      - name: gross_proceeds
+        data_type: integer
+        description: "The revenue value of the transaction (number of shares multiplied by the price per share)."
+
+      - name: _fivetran_deleted
+        data_type: boolean
+        description: "The value is TRUE when the record has been soft deleted in the production database. The value is false otherwise."
+
+      - name: _fivetran_synced
+        data_type: timestamp
+        description: "When the record was synced to the data warehouse."
+
+
+
+  - name: fct_transaction_transitions
+    description: "Table that contains info about transaction transitions, enriched with the data from `transactions` table."
+    columns:
+      - name: transition_id
+        data_type: varchar
+        description: "The unique identifier of the transaction transition."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: transaction_id
+        data_type: varchar
+        description: "The unique identifier of the transaction."
+
+      - name: transitioned_at
+        data_type: timestamp
+        description: "When the transaction moved into a new state."
+
+      - name: new_state
+        data_type: varchar
+        description: "The new state the transaction moved into."
+
+      - name: is_open_transaction
+        data_type: boolean
+        description: "Flag to indicate if the transaction is still open."
+
+      - name: transfer_method
+        data_type: varchar
+        description: "The method of transfer of the shared."
+
+      - name: company_id
+        data_type: varchar
+        description: "The unique identifier of the issuing company of the shares."
+
+      - name: num_shares
+        data_type: integer
+        description: "The number of shares associated with the each transaction."
+
+      - name: price_per_share
+        data_type: integer
+        description: "The price per share of the transaction. The total revenue value of the transaction is the number of shared multiplied by the number of shares."
+
+      - name: gross_proceeds
+        data_type: integer
+        description: "The revenue value of the transaction (number of shares multiplied by the price per share)."
+
+      - name: inserted_at
+        data_type: timestamp
+        description: "When the transaction record was created."
+
+      - name: updated_at
+        data_type: timestamp
+        description: "When the transaction transition record was last updated."
+
+      - name: _fivetran_deleted
+        data_type: boolean
+        description: "The value is TRUE when the record has been soft deleted in the production database. The value is false otherwise."
+
+      - name: _fivetran_synced
+        data_type: timestamp
+        description: "When the record was synced to the data warehouse."
+
+
+
+  - name: fct_transaction_history
+    description: "Table that contains historial information about transaction transitions for every calendar date in past."
+
+    columns:
+      - name: transaction_id
+        data_type: varchar
+        description: "Unique identifier of the transaction."
+
+      - name: transaction_state
+        data_type: varchar
+        description: "State the transaction was in at the end of the day."
+
+      - name: is_open_transaction
+        data_type: boolean
+        description: "Flag to indicate if the transaction is still open."
+
+      - name: transitioned_at
+        data_type: timestamp
+        description: "When the transaction moved into a new state."
+
+      - name: next_transitioned_at
+        data_type: timestamp
+        description: "When the transaction will change its state."
+
+      - name: report_date
+        data_type: timestamp
+        description: "Reporting date"
+
+      - name: transfer_method
+        data_type: varchar
+        description: "The method of transfer of the shared."
+
+      - name: num_shares
+        data_type: integer
+        description: "The number of shares associated with the each transaction."
+
+      - name: price_per_share
+        data_type: integer
+        description: "The price per share of the transaction. The total revenue value of the transaction is the number of shared multiplied by the number of shares."
+
+      - name: gross_proceeds
+        data_type: integer
+        description: "The revenue value of the transaction (number of shares multiplied by the price per share)."
+
+      - name: monthly_report_date
+        data_type: date
+        description: "Flag that is used to find the state of the transaction at the end of the month. Useful when you need to calculate monthly metrics."
+      
+      - name: transaction_history_id
+        data_type: varchar
+        description: "Unique key of the model."
+        data_tests:
+          - unique
+          - not_null
