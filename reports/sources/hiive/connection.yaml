@@ -2,4 +2,4 @@
 name: hiive
 type: duckdb
 options:
-  filename: ../../../hiive/database.duckdb
+  filename: database.duckdb
