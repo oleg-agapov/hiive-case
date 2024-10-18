@@ -50,7 +50,7 @@ monthly_average_fee AS (
     GROUP BY transaction_month
 ),
 
-monthly_avg_fee AS (
+monthly_cumulative_fee AS (
     SELECT
         transaction_month,
         AVG(avg_monthly_fee) OVER (
@@ -63,4 +63,4 @@ monthly_avg_fee AS (
 SELECT
     transaction_month,
     cumulative_monthly_average_fee
-FROM monthly_avg_fee
+FROM monthly_cumulative_fee
