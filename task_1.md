@@ -51,6 +51,7 @@ Model `fct_transaction_history` will be used to answer business questions about 
 To ensure data quality and correctnes of the output models I would add the following checks:
 
 - **Staging** models have unique keys and have no duplicates
+- Put `not_null` data tests for every column where it makes sense
 - Check if all transactions have a corresponding record in transitions, and vise versa, using `relationships` test:
     - ⚠️ these checks actually return a lot of errors, so would be good to check with dev team what is going on here
 - For all final **marts** we should check for duplicates. If primary key doesn't exist, we should create a composite key
